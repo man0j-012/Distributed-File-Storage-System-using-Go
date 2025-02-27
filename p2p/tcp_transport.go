@@ -6,6 +6,20 @@ import (
 	"sync" // go lib for synchronization primitives for concurrent programming protecting shared resources from deadlocks
 )
 
+//TCPPeer represents the remote node over a TCP established connection
+type TCPPeer struct{
+	conn net.Conn
+	// if we dial and retrieve a conn => outbound  == true
+	// if we accept and retrieve a conn => outbound == false
+	outbound bool 
+}
+
+func NewTCPPeer(conn net.Conn, outbound bool) *TCPPeer{
+	return &TCPPeer{
+		conn: conn,
+		outbound: outbound,
+	}
+}
 //Listening for incoming connections, storing connected peers, and ensuring thread-safe access to the peer list
 type TCPTransport struct{
 	listenAddress string
@@ -47,6 +61,7 @@ func (t* TCPTransport) StartAcceptLoop(){
 }
 
 func (t* TCPTransport) handleConn(conn net.Conn){
-fmt.Printf("new incoming connection %+v\n",conn,
+	peer := NewTCPPeer(conn, true) 
+fmt.Printf("new incoming connection %+v\n",peer,
 )
 }
